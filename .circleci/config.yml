@@ -1,0 +1,51 @@
+defaults: &defaults
+  working_directory: /go/src/moul.io/golang-repo-template
+  docker:
+    - image: circleci/golang:1.12
+  environment:
+    GO111MODULE: "on"
+
+install_retry: &install_retry
+  run:
+    name: install retry
+    command: |
+      command -v wget &>/dev/null && wget -O /tmp/retry "https://github.com/moul/retry/releases/download/v0.5.0/retry_$(uname -s)_$(uname -m)" || true
+      if [ ! -f /tmp/retry ]; then command -v curl &>/dev/null && curl -L -o /tmp/retry "https://github.com/moul/retry/releases/download/v0.5.0/retry_$(uname -s)_$(uname -m)"; fi
+      chmod +x /tmp/retry
+      /tmp/retry --version
+
+version: 2
+jobs:
+  go.build:
+    <<: *defaults
+    steps:
+      - checkout
+      - *install_retry
+      - run: /tmp/retry -m 3 go mod download
+      - run: /tmp/retry -m 3 make install
+      - run: /tmp/retry -m 3 go test -v ./...
+      - run: /tmp/retry -m 3 curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.12.2
+      - run: PATH=$PATH:$(pwd)/bin /tmp/retry -m 3 make lint
+
+  docker.build:
+    <<: *defaults
+    steps:
+      - checkout
+      #- run:
+      #    name: Install Docker Compose
+      #    command: |
+      #      umask 022
+      #      curl -L https://github.com/docker/compose/releases/download/1.11.4/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - *install_retry
+      - run: /tmp/retry -m 3 docker build -t moul/replace_me .
+
+
+workflows:
+  version: 2
+  build_and_integration:
+    jobs:
+      - go.build
+      - docker.build
+      # requires: docker.build?
