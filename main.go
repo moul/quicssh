@@ -1,15 +1,11 @@
 package main
 
 import (
-	"bytes"
-	"crypto/tls"
-	"fmt"
 	"io"
-	"log"
-	"net/http"
 	"os"
+	"sync"
 
-	"github.com/lucas-clemente/quic-go/http3"
+	"golang.org/x/net/context"
 	cli "gopkg.in/urfave/cli.v2"
 )
 
@@ -20,15 +16,13 @@ func main() {
 				Name: "server",
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "bind", Value: "localhost:4242"},
-					&cli.StringFlag{Name: "chain", Value: "./test.crt"},
-					&cli.StringFlag{Name: "key", Value: "./test.key"},
 				},
 				Action: server,
 			},
 			&cli.Command{
 				Name: "client",
 				Flags: []cli.Flag{
-					&cli.StringFlag{Name: "addr", Value: "https://localhost:4242"},
+					&cli.StringFlag{Name: "addr", Value: "localhost:4242"},
 				},
 				Action: client,
 			},
@@ -39,26 +33,31 @@ func main() {
 	}
 }
 
-func server(c *cli.Context) error {
-	http.Handle("/", http.FileServer(http.Dir(".")))
-	log.Printf("Listening on %s...", c.String("bind"))
-	return http3.ListenAndServeQUIC(c.String("bind"), c.String("chain"), c.String("key"), nil)
-}
+func readAndWrite(ctx context.Context, r io.Reader, w io.Writer, wg *sync.WaitGroup) <-chan error {
+	c := make(chan error)
+	go func() {
+		if wg != nil {
+			defer wg.Done()
+		}
+		buff := make([]byte, 1024)
 
-func client(c *cli.Context) error {
-	roundTripper := &http3.RoundTripper{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
-	defer roundTripper.Close()
-	hClient := &http.Client{Transport: roundTripper}
-	resp, err := hClient.Get(c.String("addr"))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	fmt.Println(resp)
-	body := &bytes.Buffer{}
-	if _, err = io.Copy(body, resp.Body); err != nil {
-		panic(err)
-	}
-	fmt.Println(body)
-	return nil
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				nr, err := r.Read(buff)
+				if err != nil {
+					return
+				}
+				if nr > 0 {
+					_, err := w.Write(buff[:nr])
+					if err != nil {
+						return
+					}
+				}
+			}
+		}
+	}()
+	return c
 }
