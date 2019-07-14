@@ -18,7 +18,7 @@ changelog:
     - '^docs:'
     - '^test:'
 brew:
-  name: golang-repo-template
+  name: quicssh
   github:
     owner: moul
     name: homebrew-moul
@@ -26,4 +26,4 @@ brew:
     name: moul-bot
     email: "m+bot@42.am"
   homepage: https://manfred.life/
-  description: "golang-repo-template"
+  description: "quicssh"
