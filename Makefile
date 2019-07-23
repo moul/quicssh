@@ -6,7 +6,7 @@ install:
 
 .PHONY: test
 test:
-	$(GO) test -cover -v ./...
+	$(GO) test -cover -race -v ./...
 
 .PHONY: lint
 lint:
