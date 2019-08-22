@@ -16,6 +16,11 @@ install_retry: &install_retry
 
 version: 2
 jobs:
+  platform:
+    docker:
+      - image: platform/ci:latest
+    steps:
+      - make all
   go.build:
     <<: *defaults
     steps:
@@ -48,4 +53,5 @@ workflows:
     jobs:
       - go.build
       - docker.build
+      - platform
       # requires: docker.build?
