@@ -1,4 +1,4 @@
-// Copyright © 2019 Manfred Touron <manfred.life>.
+// Copyright © 2019-2021 Manfred Touron <manfred.life>.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
