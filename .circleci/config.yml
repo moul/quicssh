@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: /go/src/moul.io/quicssh
   docker:
-    - image: circleci/golang:1.15
+    - image: circleci/golang:1.16
   environment:
     GO111MODULE: "on"
 
