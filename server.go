@@ -14,7 +14,7 @@ import (
 
 	quic "github.com/lucas-clemente/quic-go"
 	"golang.org/x/net/context"
-	cli "gopkg.in/urfave/cli.v2"
+	cli "github.com/urfave/cli/v2"
 )
 
 func server(c *cli.Context) error {
@@ -63,7 +63,7 @@ func server(c *cli.Context) error {
 
 func serverSessionHandler(ctx context.Context, session quic.Session) {
 	log.Printf("hanling session...")
-	defer session.Close()
+	defer session.CloseWithError(0, "close")
 	for {
 		stream, err := session.AcceptStream(ctx)
 		if err != nil {
