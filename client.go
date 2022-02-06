@@ -8,7 +8,7 @@ import (
 
 	quic "github.com/lucas-clemente/quic-go"
 	"golang.org/x/net/context"
-	cli "gopkg.in/urfave/cli.v2"
+	cli "github.com/urfave/cli/v2"
 )
 
 func client(c *cli.Context) error {
@@ -24,7 +24,7 @@ func client(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	defer session.Close()
+	defer session.CloseWithError(0, "close")
 
 	log.Printf("Opening stream sync...")
 	stream, err := session.OpenStreamSync(ctx)
