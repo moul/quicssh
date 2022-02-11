@@ -1,5 +1,5 @@
 # build
-FROM            golang:1.17.6-alpine as builder
+FROM            golang:1.17.7-alpine as builder
 RUN             apk add --no-cache git gcc musl-dev make
 ENV             GO111MODULE=on
 WORKDIR         /go/src/moul.io/quicssh
