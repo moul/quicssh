@@ -9,7 +9,7 @@ COPY            . ./
 RUN             make install
 
 # minimalist runtime
-FROM            alpine:3.15.1
+FROM            alpine:3.15.2
 COPY            --from=builder /go/bin/quicssh /bin/
 ENTRYPOINT      ["/bin/quicssh"]
 CMD             []
