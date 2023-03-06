@@ -5,5 +5,5 @@ go 1.12
 require (
 	github.com/lucas-clemente/quic-go v0.31.1
 	github.com/urfave/cli/v2 v2.24.1
-	golang.org/x/net v0.7.0
+	golang.org/x/net v0.8.0
 )
