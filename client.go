@@ -6,9 +6,9 @@ import (
 	"os"
 	"sync"
 
-	quic "github.com/lucas-clemente/quic-go"
-	"golang.org/x/net/context"
+	quic "github.com/quic-go/quic-go"
 	cli "github.com/urfave/cli/v2"
+	"golang.org/x/net/context"
 )
 
 func client(c *cli.Context) error {
