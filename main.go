@@ -5,8 +5,8 @@ import (
 	"os"
 	"sync"
 
-	"golang.org/x/net/context"
 	cli "github.com/urfave/cli/v2"
+	"golang.org/x/net/context"
 )
 
 func main() {

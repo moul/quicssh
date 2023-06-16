@@ -12,9 +12,9 @@ import (
 	"net"
 	"sync"
 
-	quic "github.com/lucas-clemente/quic-go"
-	"golang.org/x/net/context"
+	quic "github.com/quic-go/quic-go"
 	cli "github.com/urfave/cli/v2"
+	"golang.org/x/net/context"
 )
 
 func server(c *cli.Context) error {
@@ -58,12 +58,15 @@ func server(c *cli.Context) error {
 
 		go serverSessionHandler(ctx, session)
 	}
-	return nil
 }
 
-func serverSessionHandler(ctx context.Context, session quic.Session) {
+func serverSessionHandler(ctx context.Context, session quic.Connection) {
 	log.Printf("hanling session...")
-	defer session.CloseWithError(0, "close")
+	defer func() {
+		if err := session.CloseWithError(0, "close"); err != nil {
+			log.Printf("session close error: %v", err)
+		}
+	}()
 	for {
 		stream, err := session.AcceptStream(ctx)
 		if err != nil {
@@ -106,22 +109,4 @@ func serverStreamHandler(ctx context.Context, conn io.ReadWriteCloser) {
 	cancel()
 	wg.Wait()
 	log.Printf("Piping finished")
-}
-
-func netCopy(input io.Reader, output io.Writer) (err error) {
-	buf := make([]byte, 8192)
-	for {
-		count, err := input.Read(buf)
-		if err != nil {
-			if err == io.EOF && count > 0 {
-				output.Write(buf[:count])
-			}
-			break
-		}
-		if count > 0 {
-			log.Println(buf, count)
-			output.Write(buf[:count])
-		}
-	}
-	return
 }

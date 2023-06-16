@@ -6,9 +6,9 @@ import (
 	"os"
 	"sync"
 
-	quic "github.com/lucas-clemente/quic-go"
-	"golang.org/x/net/context"
+	quic "github.com/quic-go/quic-go"
 	cli "github.com/urfave/cli/v2"
+	"golang.org/x/net/context"
 )
 
 func client(c *cli.Context) error {
@@ -20,11 +20,15 @@ func client(c *cli.Context) error {
 	}
 
 	log.Printf("Dialing %q...", c.String("addr"))
-	session, err := quic.DialAddr(c.String("addr"), config, nil)
+	session, err := quic.DialAddr(ctx, c.String("addr"), config, nil)
 	if err != nil {
 		return err
 	}
-	defer session.CloseWithError(0, "close")
+	defer func() {
+		if err := session.CloseWithError(0, "close"); err != nil {
+			log.Printf("session close error: %v", err)
+		}
+	}()
 
 	log.Printf("Opening stream sync...")
 	stream, err := session.OpenStreamSync(ctx)
