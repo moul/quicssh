@@ -104,6 +104,10 @@ OPTIONS:
 $ go get -u moul.io/quicssh
 ```
 
+## Resources
+
+- https://korben.info/booster-ssh-quic-quicssh.html
+
 ## License
 
 © 2019-2021 [Manfred Touron](https://manfred.life) -
