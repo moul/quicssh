@@ -108,6 +108,8 @@ $ go get -u moul.io/quicssh
 
 - https://korben.info/booster-ssh-quic-quicssh.html
 
+[![Star History Chart](https://api.star-history.com/svg?repos=moul/quicssh&type=Date)](https://star-history.com/#moul/quicssh&Date)
+
 ## License
 
 © 2019-2021 [Manfred Touron](https://manfred.life) -
