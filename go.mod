@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/quic-go/quic-go v0.35.1
-	github.com/urfave/cli/v2 v2.25.6
+	github.com/urfave/cli/v2 v2.25.7
 	golang.org/x/net v0.11.0
 )
 
