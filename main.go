@@ -48,11 +48,13 @@ func readAndWrite(ctx context.Context, r io.Reader, w io.Writer, wg *sync.WaitGr
 			default:
 				nr, err := r.Read(buff)
 				if err != nil {
+					c <- err
 					return
 				}
 				if nr > 0 {
 					_, err := w.Write(buff[:nr])
 					if err != nil {
+						c <- err
 						return
 					}
 				}
