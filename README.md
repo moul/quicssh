@@ -31,7 +31,7 @@ SSH Connection proxified with QUIC
 ┌───────────────────────────────────────┐             ┌───────────────────────┐
 │                  bob                  │             │         wopr          │
 │ ┌───────────────────────────────────┐ │             │ ┌───────────────────┐ │
-│ │ssh -o ProxyCommand "quicssh client│ │             │ │       sshd        │ │
+│ │ssh -o ProxyCommand="quicssh client│ │             │ │       sshd        │ │
 │ │     --addr %h:4545" user@wopr     │ │             │ └───────────────────┘ │
 │ │                                   │ │             │           ▲           │
 │ └───────────────────────────────────┘ │             │           │           │
@@ -50,37 +50,38 @@ SSH Connection proxified with QUIC
 ```console
 $ quicssh -h
 NAME:
-   quicssh - A new cli application
+   quicssh - Client and server parts to proxy SSH (TCP) over UDP using QUIC transport
 
 USAGE:
-   quicssh [global options] command [command options] [arguments...]
+   quicssh [global options] command [command options]
 
 VERSION:
-   0.0.0
+   v0.0.0-20230730133128-1c771b69d1a7+dirty
 
 COMMANDS:
-     server
-     client
-     help, h  Shows a list of commands or help for one command
+   server
+   client
+   help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --help, -h     show help (default: false)
-   --version, -v  print the version (default: false)
-   ```
+   --help, -h     show help
+   --version, -v  print the version
+```
 
 ### Client
 
 ```console
 $ quicssh client -h
 NAME:
-   quicssh client -
+   quicssh client
 
 USAGE:
-   quicssh client [command options] [arguments...]
+   quicssh client [command options]
 
 OPTIONS:
-   --addr value  (default: "localhost:4242")
-   --help, -h    show help (default: false)
+   --addr value       address of server (default: "localhost:4242")
+   --localaddr value  source address of UDP packets (default: ":0")
+   --help, -h         show help
 ```
 
 ### Server
@@ -88,14 +89,15 @@ OPTIONS:
 ```console
 $ quicssh server -h
 NAME:
-   quicssh server -
+   quicssh server
 
 USAGE:
-   quicssh server [command options] [arguments...]
+   quicssh server [command options]
 
 OPTIONS:
-   --bind value  (default: "localhost:4242")
-   --help, -h    show help (default: false)
+   --bind value      bind address (default: "localhost:4242")
+   --sshdaddr value  target address of sshd (default: "localhost:22")
+   --help, -h        show help
 ```
 
 ## Install

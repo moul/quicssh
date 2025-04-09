@@ -1,34 +1,26 @@
-run:
-  deadline: 1m
-  tests: false
-  #skip-files:
-  #  - ".*\\.gen\\.go"
-
 linters-settings:
-  golint:
-    min-confidence: 0
-  maligned:
-    suggest-new: true
   goconst:
     min-len: 5
     min-occurrences: 4
   misspell:
     locale: US
+  gosec:
+    excludes: [G402]
+  ireturn:
+    allow:
+      - context.Context
+      - error
+      - io.(Reader|Writer)
 
 linters:
-  disable-all: true
-  enable:
-    - goconst
-    - misspell
-    - deadcode
-    - misspell
-    - structcheck
-    - errcheck
-    - unused
-    - varcheck
-    - staticcheck
-    - unconvert
-    - gofmt
-    - goimports
-    - golint
-    - ineffassign
+  enable-all: true
+  disable:
+    - depguard
+    - exhaustruct
+    - godox     # TODOs is ok
+    - mnd       # nice to have
+    - nlreturn  # nice to have
+    - paralleltest # for now we have only one integration (not parallelable) test
+    - tenv
+    - varnamelen
+    - wsl

@@ -1,0 +1,23 @@
+---
+name: build # this string appears on badge
+on:
+  - push
+  - pull_request
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    name: "Unit tests on go ${{ matrix.go }}"
+    strategy:
+      matrix:
+        go:
+          - "1.21"
+          - "1.22"
+          - "1.23"
+          - "1.24"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "${{ matrix.go }}"
+      - run: "go build -v -x ."
