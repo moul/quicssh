@@ -60,7 +60,7 @@ func server(c *cli.Context) error {
 	}
 }
 
-func serverSessionHandler(ctx context.Context, session quic.Connection) {
+func serverSessionHandler(ctx context.Context, session *quic.Conn) {
 	log.Printf("hanling session...")
 	defer func() {
 		if err := session.CloseWithError(0, "close"); err != nil {
